@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>U Aye Kyaw — tapmi</title>
+<meta name="description" content="Tap to connect with U Aye Kyaw — powered by tapmi" />
+<style>
+  :root{
+    --bg:#050508;
+    --surface:#101016;
+    --surface-2:#181820;
+    --border:#2A2A34;
+    --text:#FAFAFA;
+    --muted:#A1A1AA;
+    --dim:#71717A;
+    --cyan:#22D3EE;
+    --violet:#8B5CF6;
+    --pink:#F472B6;
+    --amber:#FBBF24;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:'DM Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--bg);color:var(--text);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:24px 16px;overflow-x:hidden;
+  }
+
+  /* Aurora ambient field */
+  .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .aurora span{position:absolute;border-radius:50%;filter:blur(110px);opacity:.8;animation:drift 14s ease-in-out infinite alternate}
+  .aurora span:nth-child(1){width:420px;height:420px;background:rgba(139,92,246,.20);top:-140px;left:-120px}
+  .aurora span:nth-child(2){width:460px;height:460px;background:rgba(34,211,238,.14);bottom:-160px;right:-140px;animation-delay:-4s}
+  .aurora span:nth-child(3){width:340px;height:340px;background:rgba(244,114,182,.12);top:38%;left:58%;animation-delay:-8s}
+  @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(38px,-30px) scale(1.12)}}
+
+  /* Card with animated gradient border */
+  .card{
+    position:relative;z-index:1;width:100%;max-width:430px;
+    border-radius:34px;padding:2px;
+    background:conic-gradient(from var(--a,0deg),var(--violet),var(--cyan),var(--pink),var(--amber),var(--violet));
+    animation:spin 9s linear infinite,rise .7s cubic-bezier(.22,1,.36,1) both;
+  }
+  @property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+  @keyframes spin{to{--a:360deg}}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  .inner{
+    background:linear-gradient(180deg,var(--surface),#0B0B10);
+    border-radius:32px;overflow:hidden;text-align:center;
+    padding-bottom:26px;
+  }
+
+  /* Cover banner with ripple pattern */
+  .cover{
+    position:relative;height:132px;
+    background:
+      radial-gradient(circle at 22% 120%,rgba(34,211,238,.35),transparent 55%),
+      radial-gradient(circle at 82% -30%,rgba(244,114,182,.30),transparent 55%),
+      linear-gradient(135deg,#241143,#0E2A3F);
+  }
+  .cover svg{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+
+  .avatar-wrap{position:relative;width:170px;height:170px;margin:-84px auto 14px}
+  .ripple{position:absolute;inset:0;margin:auto;width:132px;height:132px;border-radius:50%;
+    border:2px solid var(--cyan);opacity:0;animation:pulse 3.2s ease-out infinite}
+  .ripple:nth-child(2){border-color:var(--pink);animation-delay:1.05s}
+  .ripple:nth-child(3){border-color:var(--violet);animation-delay:2.1s}
+  @keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.5);opacity:0}}
+  .avatar{
+    position:absolute;inset:0;margin:auto;width:132px;height:132px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:46px;font-weight:700;letter-spacing:-1px;
+    background:
+      linear-gradient(var(--surface-2),var(--surface-2)) padding-box,
+      conic-gradient(var(--violet),var(--cyan),var(--pink),var(--violet)) border-box;
+    border:4px solid transparent;
+    box-shadow:0 14px 40px rgba(0,0,0,.55);
+  }
+
+  h1{font-size:27px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;justify-content:center;gap:8px}
+  .honor{color:var(--muted);font-weight:500}
+  .verify{width:20px;height:20px;flex:none}
+  .role{margin-top:6px;font-size:14px;letter-spacing:2.5px;color:var(--dim);text-transform:uppercase}
+
+  .location{
+    display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:7px 16px;
+    font-size:13.5px;color:var(--muted);
+    background:var(--surface-2);border:1px solid var(--border);border-radius:999px;
+  }
+  .location svg{width:14px;height:14px;stroke:var(--pink)}
+
+  .divider{height:1px;margin:24px 26px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent)}
+
+  .actions{display:flex;flex-direction:column;gap:12px;padding:0 24px}
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:16px;font-family:inherit;font-size:15.5px;font-weight:600;
+    border-radius:16px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text);
+    cursor:pointer;text-decoration:none;
+    transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn:hover{border-color:#42424E}
+  .btn.primary{
+    background:linear-gradient(135deg,var(--violet),var(--cyan) 55%,var(--pink));
+    background-size:180% 180%;border:none;color:#05060A;
+    animation:sheen 6s ease infinite;
+  }
+  @keyframes sheen{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .btn svg{width:19px;height:19px;flex:none}
+  .num{font-variant-numeric:tabular-nums}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);
+    background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+    font-size:14px;padding:11px 20px;border-radius:12px;
+    opacity:0;pointer-events:none;transition:.3s ease;z-index:9;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  footer{margin-top:24px;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--dim);font-size:13px}
+  footer .mark{display:flex;align-items:center;gap:5px;color:var(--text);font-weight:700}
+  footer svg{width:15px;height:15px}
+</style>
+</head>
+<body>
+
+<div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+
+<main class="card">
+  <div class="inner">
+
+    <div class="cover" aria-hidden="true">
+      <svg viewBox="0 0 430 132" preserveAspectRatio="xMidYMid slice" fill="none" stroke="#FFFFFF" stroke-opacity=".16" stroke-width="1.4">
+        <circle cx="70" cy="140" r="30"/><circle cx="70" cy="140" r="58"/><circle cx="70" cy="140" r="86"/><circle cx="70" cy="140" r="114"/>
+        <circle cx="380" cy="-8" r="26"/><circle cx="380" cy="-8" r="52"/><circle cx="380" cy="-8" r="78"/><circle cx="380" cy="-8" r="104"/>
+      </svg>
+    </div>
+
+    <div class="avatar-wrap">
+      <span class="ripple"></span>
+      <span class="ripple"></span>
+      <span class="ripple"></span>
+      <div class="avatar">AK</div>
+    </div>
+
+    <h1>
+      <span class="honor">U</span> Aye Kyaw
+      <svg class="verify" viewBox="0 0 24 24" fill="none">
+        <path d="M12 2l2.4 2.1 3.2-.4 1.1 3 3 1.1-.4 3.2L23.4 12l-2.1 2.4.4 3.2-3 1.1-1.1 3-3.2-.4L12 23.4l-2.4-2.1-3.2.4-1.1-3-3-1.1.4-3.2L.6 12l2.1-2.4-.4-3.2 3-1.1 1.1-3 3.2.4Z" fill="#22D3EE"/>
+        <path d="m8.5 12.2 2.4 2.4 4.6-4.9" stroke="#05060A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </h1>
+    <div class="role">tapmi member</div>
+
+    <span class="location">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+      </svg>
+      Ayeyarwady, Myanmar
+    </span>
+
+    <div class="divider"></div>
+
+    <div class="actions">
+      <a class="btn primary" href="tel:+9595123931">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.08 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/>
+        </svg>
+        Call <span class="num">09 512 3931</span>
+      </a>
+
+      <div class="row">
+        <a class="btn" href="sms:+9595123931">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/>
+          </svg>
+          Message
+        </a>
+        <button class="btn" id="shareBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <path d="m8.59 13.51 6.83 3.98m-.01-10.98-6.82 3.98"/>
+          </svg>
+          Share
+        </button>
+      </div>
+
+      <button class="btn" id="saveBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/>
+          <path d="M17 21v-8H7v8M7 3v5h8"/>
+        </svg>
+        Save Contact
+      </button>
+    </div>
+
+    <footer>
+      <span>powered by</span>
+      <span class="mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2.4" stroke-linecap="round">
+          <path d="M8.5 10.5a5 5 0 0 1 7 0"/>
+          <path d="M5.7 7.7a9 9 0 0 1 12.6 0" opacity=".55"/>
+          <circle cx="12" cy="14.5" r="1.8" fill="#22D3EE" stroke="none"/>
+        </svg>
+        tapmi
+      </span>
+    </footer>
+
+  </div>
+</main>
+
+<div class="toast" id="toast">Link copied to clipboard</div>
+
+<script>
+  const NAME  = "U Aye Kyaw";
+  const PHONE = "+9595123931";
+
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    const vcard = [
+      "BEGIN:VCARD",
+      "VERSION:3.0",
+      "FN:" + NAME,
+      "N:Kyaw;Aye;;U;",
+      "TEL;TYPE=CELL:" + PHONE,
+      "ADR;TYPE=HOME:;;;Ayeyarwady;;;Myanmar",
+      "NOTE:Shared via tapmi",
+      "END:VCARD"
+    ].join("\r\n");
+    const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href = url; a.download = "U-Aye-Kyaw.vcf";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("shareBtn").addEventListener("click", async () => {
+    const shareData = { title: NAME + " — tapmi", text: "Connect with " + NAME, url: location.href };
+    if (navigator.share) {
+      try { await navigator.share(shareData); } catch (_) {}
+    } else {
+      try { await navigator.clipboard.writeText(location.href); showToast(); } catch (_) {}
+    }
+  });
+
+  function showToast() {
+    const t = document.getElementById("toast");
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2200);
+  }
+</script>
+</body>
+</html>
